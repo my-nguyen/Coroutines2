@@ -40,10 +40,14 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             Log.i(TAG, "doApiRequests coroutine thread: ${Thread.currentThread().name}")
-            val post = blogService.getPost(1)
-            val user = blogService.getUser(post.userId)
-            val posts = blogService.getPostsByUser(user.id)
-            binding.textView.text = "User ${user.name} made ${posts.size} posts"
+            try {
+                val post = blogService.getPost(1)
+                val user = blogService.getUser(post.userId)
+                val posts = blogService.getPostsByUser(user.id)
+                binding.textView.text = "User ${user.name} made ${posts.size} posts"
+            } catch (exception: Exception) {
+                Log.e(TAG, "Exception $exception")
+            }
         }
     }
 }

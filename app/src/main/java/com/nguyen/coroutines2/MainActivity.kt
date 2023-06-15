@@ -37,14 +37,13 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val blogService = retrofit.create(BlogService::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
+
+        CoroutineScope(Dispatchers.Main).launch {
             Log.i(TAG, "doApiRequests coroutine thread: ${Thread.currentThread().name}")
             val post = blogService.getPost(1)
             val user = blogService.getUser(post.userId)
             val posts = blogService.getPostsByUser(user.id)
-            withContext(Dispatchers.Main) {
-                binding.textView.text = "User ${user.name} made ${posts.size} posts"
-            }
+            binding.textView.text = "User ${user.name} made ${posts.size} posts"
         }
     }
 }

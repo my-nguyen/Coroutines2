@@ -1,16 +1,15 @@
 package com.nguyen.coroutines2
 
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface BlogService {
     @GET("/posts/{id}")
-    fun getPost(@Path("id") postId: Int): Call<Post>
+    suspend fun getPost(@Path("id") postId: Int): Post
 
     @GET("/users/{id}")
-    fun getUser(@Path("id") userId: Int): Call<User>
+    suspend fun getUser(@Path("id") userId: Int): User
 
     @GET("/users/{id}/posts")
-    fun getPostsByUser(@Path("id") userId: Int): Call<List<Post>>
+    suspend fun getPostsByUser(@Path("id") userId: Int): List<Post>
 }

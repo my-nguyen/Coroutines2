@@ -1,7 +1,9 @@
 package com.nguyen.coroutines2
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.nguyen.coroutines2.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
@@ -10,6 +12,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.math.BigInteger
+import java.util.*
+import kotlin.system.measureTimeMillis
 
 private const val TAG = "MainActivity"
 private const val BASE_URL = "https://jsonplaceholder.typicode.com"
@@ -27,6 +32,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnNetwork.setOnClickListener {
             doApiRequests()
+        }
+        binding.btnCompute.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.progressBar.visibility = View.VISIBLE
+                val time = doExpensiveWork()
+                binding.progressBar.visibility = View.INVISIBLE
+                binding.textView.text = time
+            }
         }
     }
 
@@ -49,5 +62,11 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, "Exception $exception")
             }
         }
+    }
+
+    private suspend fun doExpensiveWork() = withContext(Dispatchers.Default) {
+        Log.i(TAG, "doExpensiveWork coroutine thread: ${Thread.currentThread().name}")
+        val timeTakenMillis = measureTimeMillis { BigInteger.probablePrime(2200, Random()) }
+        "Time taken (ms): $timeTakenMillis"
     }
 }
